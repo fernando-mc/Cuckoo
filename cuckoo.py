@@ -9,31 +9,11 @@ logging.basicConfig()
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+# This must be a verified address in AWS SES
 FROM_ADDRESS='staff@thewoofgarden.com'
 REPLY_TO_ADDRESS='staff@thewoofgarden.com'
 
-TODAY = DAYS[datetime.date.today().weekday()]
-DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-BASE_TASKS = ('1. Feed the dogs \n2. Feed the rabbits \n'
-             + '3. Feed the cats \n4. Feed the turtles \n' 
-             + '5. Walk the dogs \n6. Empty cat litterboxes\n')
-DAILY_TASKS = {
-    'Monday': BASE_TASKS + '7. Clean the dog areas\n',
-    'Tuesday': BASE_TASKS + '7. Clean the cat areas\n',
-    'Wednesday': BASE_TASKS + '7. Feed the aligator\n',
-    'Thursday': BASE_TASKS+ '7. Clean the dog areas\n',
-    'Friday': BASE_TASKS + '7. Clean the cat areas\n',
-    'Saturday': BASE_TASKS,
-    'Sunday': BASE_TASKS
-}
 
-MESSAGES = {
-    'come_to_work': ('Remember that you\'re scheduled for'
-                  + ' work today at 9am! If you\'re sick or need a '
-                  + 'replacement please reply to this email now!'),
-    'work_tasks': 'Remember that today is {}. Please be sure to: \n{}'.format(TODAY, DAILY_TASKS[TODAY]),
-    'pickup_your_pet': 'Remember to pickup your pet today by 8pm!'
-}
 # In the AWS SES sandbox you can only send to/from verified emails
 # Remember to do this before adding your emails here
 
@@ -82,7 +62,7 @@ def send_email_reminder(title, salutation, message, recipient):
                 },
                 'Body': {
                     'Text': {
-                        'Data': 'This is a non-html version of the email'
+                        'Data': plain_text_email
                     },
                     'Html': {
                         'Data': html_email
@@ -99,15 +79,51 @@ def send_email_reminder(title, salutation, message, recipient):
         raise e
 
 
+MESSAGES = {
+    'come_to_work': (),
+    'work_tasks': 'Remember that today is {}. Please be sure to: \n{}',
+    'pickup_your_pet': 'Remember to pickup your pet today by 8pm!'
+}
 
 
-def send_come_to_work_reminder
+def send_come_to_work_reminder():
+    message = ('Remember that you\'re scheduled for work today at 9am! If you\'re sick or need a '
+                + 'replacement please reply to this email now!')
 
 
-def send_pickup_your_pet_reminder
+def send_pickup_your_pet_reminder():
 
 
-def send_feed_pets_reminder
+
+
+def send_daily_tasks_reminder():
+
+
+BASE_TASKS = ('1. Feed the dogs \n2. Feed the rabbits \n'
+             + '3. Feed the cats \n4. Feed the turtles \n' 
+             + '5. Walk the dogs \n6. Empty cat litterboxes\n')
+
+DAILY_TASKS = {
+    'Monday': BASE_TASKS + '7. Clean the dog areas\n',
+    'Tuesday': BASE_TASKS + '7. Clean the cat areas\n',
+    'Wednesday': BASE_TASKS + '7. Feed the aligator\n',
+    'Thursday': BASE_TASKS+ '7. Clean the dog areas\n',
+    'Friday': BASE_TASKS + '7. Clean the cat areas\n',
+    'Saturday': BASE_TASKS,
+    'Sunday': BASE_TASKS
+}
+
+.format(TODAY, DAILY_TASKS[TODAY])
+
+
+DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+# Gets an integer value from 0 to 6 for today (Monday - Sunday)
+# Keep in mind this will run in GMT and you will need to adjust runtimes accordingly 
+TODAY = DAYS[datetime.date.today().weekday()]
+
+
+
+
 
 
 for client in clients:
