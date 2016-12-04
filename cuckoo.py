@@ -78,19 +78,6 @@ def send_email_reminder(title, salutation, message, recipient):
         logger.info(e.message)
         raise e
 
-
-MESSAGES = {
-    'come_to_work': (),
-    'work_tasks': 'Remember that today is {}. Please be sure to: \n{}',
-    'pickup_your_pet': 'Remember to pickup your pet today by 8pm!'
-}
-
-
-def send_come_to_work_reminder():
-    message = ('Remember that you\'re scheduled for work today at 9am! If you\'re sick or need a '
-                + 'replacement please reply to this email now!')
-
-
 def send_pickup_your_pet_reminder():
 
 
@@ -98,19 +85,14 @@ def send_pickup_your_pet_reminder():
 
 def send_daily_tasks_reminder():
 
-
-BASE_TASKS = ('1. Feed the dogs \n2. Feed the rabbits \n'
-             + '3. Feed the cats \n4. Feed the turtles \n' 
-             + '5. Walk the dogs \n6. Empty cat litterboxes\n')
-
 DAILY_TASKS = {
-    'Monday': BASE_TASKS + '7. Clean the dog areas\n',
-    'Tuesday': BASE_TASKS + '7. Clean the cat areas\n',
-    'Wednesday': BASE_TASKS + '7. Feed the aligator\n',
-    'Thursday': BASE_TASKS+ '7. Clean the dog areas\n',
-    'Friday': BASE_TASKS + '7. Clean the cat areas\n',
-    'Saturday': BASE_TASKS,
-    'Sunday': BASE_TASKS
+    'Monday': '1. Clean the dog areas\n',
+    'Tuesday': '1. Clean the cat areas\n',
+    'Wednesday': '1. Feed the aligator\n',
+    'Thursday': '1. Clean the dog areas\n',
+    'Friday': '1. Clean the cat areas\n',
+    'Saturday': '1. Relax! Play with the puppies! It\'s the weekend!',
+    'Sunday': '1. Relax! Play with the puppies! It\'s the weekend!'
 }
 
 .format(TODAY, DAILY_TASKS[TODAY])
@@ -137,7 +119,17 @@ for client in clients:
 
 
 def handler(event,context):
-    # If x
+    event_trigger = event['resources'][0]
+    print 'event triggered by ' + event_trigger
+    if 'Morning' in event_trigger:
+        # s3 get html template for morning
+    elif 'Afternoon' in event_trigger:
+        # s3 get afternoon
+    elif 'Pickup' in event_trigger:
+        # s3 get pickup
+    else:
+        return 'No template for this trigger!'
+
 
 class Context:
     def __init__(self, **entries):
