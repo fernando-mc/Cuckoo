@@ -1,5 +1,3 @@
-import json
-import recipients
 import datetime
 import boto3
 from jinja2 import Template
@@ -9,13 +7,13 @@ from jinja2 import Template
 #
 # Recipient emails or domains in the AWS Email Sandbox must be verified
 # You'll want to change this to the email you verify in SES
-FROM_ADDRESS='staff@thewoofgarden.com'
-REPLY_TO_ADDRESS='staff@thewoofgarden.com'
+FROM_ADDRESS='thewoofgardenstaff@gmail.com'
+REPLY_TO_ADDRESS='thewoofgardenstaff@gmail.com'
 
 # You'll also need to change these to email addresses you verify in AWS
 CLIENTS = [
     # Format: [email, 'first name', 'last name', 'pet name']
-    ['zoe.on.the.firefly@outlook.com', 'Zoë', 'Washburne', 'Firefly II'],
+    ['zoe.on.the.firefly@outlook.com', 'Zoe', 'Washburne', 'Firefly II'],
     ['pluralsight.fernando@gmail.com', 'Fernando', 'Medina Corey', 'Riley']                
 ]
 
@@ -26,7 +24,7 @@ EMPLOYEES = [
 ]
 
 # Change to the bucket you create on your AWS account
-TEMPLATE_S3_BUCKET = 'the-woof-garden-email-templates'
+TEMPLATE_S3_BUCKET = 'woof-garden-templates'
 #
 #
 # End of things you need to change
@@ -45,7 +43,7 @@ def get_template_from_s3(key):
 def render_come_to_work_template(employee_first_name):
     subject = 'Work Schedule Reminder'
     template = get_template_from_s3('come_to_work.html')
-    htm_email = template.render(first_name = employee_first_name)
+    html_email = template.render(first_name = employee_first_name)
     plaintext_email = 'Hello {0}, \nPlease remember to be into work by 8am'.format(employee_first_name)
     return html_email, plaintext_email, subject
 
@@ -83,7 +81,7 @@ def render_pickup_template(client_first_name, client_pet_name):
     subject = 'Pickup Reminder'
     template = get_template_from_s3('pickup.html')
     html_email = template.render(first_name = client_first_name, pet_name = client_pet_name)
-    plaintext_email = 'Hello {0}, \nPlease remember to pickup {2} by 7pm!'.format(client_first_name, client_pet_name)
+    plaintext_email = 'Hello {0}, \nPlease remember to pickup {1} by 7pm!'.format(client_first_name, client_pet_name)
     return html_email, plaintext_email, subject
 
 def send_email(html_email, plaintext_email, subject, recipients):
@@ -121,26 +119,27 @@ def send_email(html_email, plaintext_email, subject, recipients):
 def handler(event,context):
     event_trigger = event['resources'][0]
     print 'event triggered by ' + event_trigger
-    if 'Morning' in event_trigger:
+    if 'come_to_work' in event_trigger:
         for employee in EMPLOYEES:
-            email = employee[0]
+            email = []
+            email.append(employee[0])
             employee_first_name = employee[1]
             html_email, plaintext_email, subject = render_come_to_work_template(employee_first_name)
             send_email(html_email, plaintext_email, subject, email)
-    elif 'Afternoon' in event_trigger:
+    elif 'daily_tasks' in event_trigger:
         for employee in EMPLOYEES:
-            email = employee[0]
+            email = []
+            email.append(employee[0])
             html_email, plaintext_email, subject = render_daily_tasks_template()
             send_email(html_email, plaintext_email, subject, email)
-    elif 'Pickup' in event_trigger:
+    elif 'pickup' in event_trigger:
         for client in CLIENTS:
-            email = client[0]
+            email = []
+            email.append(client[0])
             client_first_name = client[1]
             pet_name = client[3]
             html_email, plaintext_email, subject = render_pickup_template(client_first_name, pet_name)
             send_email(html_email, plaintext_email, subject, email)
     else:
         return 'No template for this trigger!'
-
-
 
