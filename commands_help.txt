@@ -114,7 +114,8 @@ aws lambda create-function \
 
 aws events list-rules
 
-# We'll have the function trust events from each of these Cloudwatch Events
+# We'll have the function trust events from each 
+# of these Cloudwatch Events
 
 aws lambda add-permission \
 --function-name woof_garden_cuckoo \
