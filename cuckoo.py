@@ -36,7 +36,7 @@ def get_template_from_s3(key):
     try:
         template = Template(s3_file['Body'].read().decode('utf-8'))
     except Exception as e:
-        print 'Failed to load template'
+        print('Failed to load template')
         raise e
     return template
 
@@ -112,13 +112,13 @@ def send_email(html_email, plaintext_email, subject, recipients):
             ]
         )
     except Exception as e:
-        print 'Failed to send message via SES'
-        print e.message
+        print('Failed to send message via SES')
+        print(e.message)
         raise e
 
 def handler(event,context):
     event_trigger = event['resources'][0]
-    print 'event triggered by ' + event_trigger
+    print('event triggered by ' + event_trigger)
     if 'come_to_work' in event_trigger:
         for employee in EMPLOYEES:
             email = []
