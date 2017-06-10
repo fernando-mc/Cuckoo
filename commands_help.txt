@@ -57,8 +57,15 @@ aws events put-rule \
 # Testing the function from the command line:
 # Make sure you're in the directory with the cuckoo.py file
 # Open a Python shell
+#
+# Windows: If you are in windows use and work in git bash use the following line. There 
+#          are known bugs where the console will just hang invoking python directly. 
+#
+#     winpty python
+#
 
 python
+
 
 # In the python shell I'll put commands after >>>
 # import the function

@@ -1,7 +1,6 @@
 import datetime
 import boto3
 from jinja2 import Template
-
 # Start of some things you need to change
 #
 #
@@ -21,7 +20,7 @@ EMPLOYEES = [
     # Content stored in this order: [email, first_name, last_name]
     # Change to any email you verify in SES
     ['springfield.homer@yahoo.com', 'Homer', 'Simpson']
-]
+]        
 
 # Change to the bucket you create on your AWS account
 TEMPLATE_S3_BUCKET = 'woof-garden-templates'
@@ -34,9 +33,9 @@ def get_template_from_s3(key):
     s3 = boto3.client('s3')
     s3_file = s3.get_object(Bucket = TEMPLATE_S3_BUCKET, Key = key)
     try:
-        template = Template(s3_file['Body'].read())
+        template = Template(s3_file['Body'].read().decode('utf-8'))
     except Exception as e:
-        print 'Failed to load template'
+        print('Failed to load template')
         raise e
     return template
 
@@ -112,13 +111,13 @@ def send_email(html_email, plaintext_email, subject, recipients):
             ]
         )
     except Exception as e:
-        print 'Failed to send message via SES'
-        print e.message
+        print('Failed to send message via SES')
+        print(e.message)
         raise e
 
 def handler(event,context):
     event_trigger = event['resources'][0]
-    print 'event triggered by ' + event_trigger
+    print('event triggered by ' + event_trigger)
     if 'come_to_work' in event_trigger:
         for employee in EMPLOYEES:
             email = []
