@@ -34,7 +34,7 @@ def get_template_from_s3(key):
     s3 = boto3.client('s3')
     s3_file = s3.get_object(Bucket = TEMPLATE_S3_BUCKET, Key = key)
     try:
-        template = Template(s3_file['Body'].read())
+        template = Template(s3_file['Body'].read().decode('utf-8'))
     except Exception as e:
         print 'Failed to load template'
         raise e
